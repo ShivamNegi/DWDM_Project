@@ -22,3 +22,5 @@ sheets = [
 
 for sheet in sheets:
     data[sheet] = data[sheet][7:]
+
+pyod.write_data("out1.ods", data)

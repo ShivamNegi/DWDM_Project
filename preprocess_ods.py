@@ -30,6 +30,8 @@ description = [
     "Iron",
     "Zinc"]
 
+weights = [0.3, 0.1, 0.05, 0.05, 0.2, 0.05, 0.05, 0.05, 0.1, 0.05]
+threshold = [284, 61, 1, 1.31, 34.5, 0.126, 0.165, 0.203, 5.74, 0.44]
 
 
 def preprocess(data):
@@ -92,5 +94,35 @@ def main():
     write_newdata(new_data)
 
 
+def getname(data, sheet):
+    lines = []
+    for i in range(4, 18):
+        line = ""
+        summation = 0
+        for k in range(2, 12):
+            if data[sheet][k][i] < threshold[i]:
+                summation = summation - threshold[i]
+            else:
+                summation = summation + threshold[i]
+            if k == 11:
+                val = str(data[sheet][k][i])
+            else:
+                val = str(data[sheet][k][i]) + ','
+            line = line + val
+        lines.append(line)
+    return lines
+
 if __name__ == '__main__':
-    main()
+    # main()
+    filename = raw_input("Enter inside file name:")
+    data = pyod.get_data(filename)
+    for sheet in sheets:
+        try:
+            lines = getname(data, sheet)
+            out = "./text/" + sheet + '.txt'
+            with open(out, 'w') as f:
+                for line in lines:
+                    f.write(line)
+                    f.write('\n')
+        except:
+            print sheet

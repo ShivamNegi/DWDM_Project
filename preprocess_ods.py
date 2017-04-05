@@ -54,8 +54,7 @@ def preprocess_description(data, new_data):
         for i in range(len(k)):
             if i < 3:
                 k_new.append(k[i])
-                continue
-            if k[i][1] in description:
+            elif k[i][1] in description:
                 k_new.append(k[i])
         new_data[sheet] = k_new
     return new_data
@@ -72,9 +71,9 @@ def write_newdata(new_data):
 
 
 def main():
-    rural_filename = raw_input("Enter rural file name:")
-    urban_filename = raw_input("Enter urban file name:")
-    data = pyod.get_data(rural_filename)
+    outside_filename = raw_input("Enter outside file name:")
+    inside_filename = raw_input("Enter inside file name:")
+    data = pyod.get_data(outside_filename)
     new_data = OrderedDict()
 
     data = preprocess(data)
@@ -83,7 +82,7 @@ def main():
     new_data = preprocess_description(data, new_data)
     write_newdata(new_data)
 
-    data = pyod.get_data(urban_filename)
+    data = pyod.get_data(inside_filename)
     new_data = OrderedDict()
 
     data = preprocess(data)

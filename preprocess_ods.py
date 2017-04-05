@@ -30,8 +30,9 @@ description = [
     "Iron",
     "Zinc"]
 
-weights = [0.3, 0.1, 0.05, 0.05, 0.2, 0.05, 0.05, 0.05, 0.1, 0.05]
-threshold = [284, 61, 1, 1.31, 34.5, 0.126, 0.165, 0.203, 5.74, 0.44]
+weights = [0.1, 0.1, 0.075, 0.075, 0.2, 0.075, 0.075, 0.05, 0.1, 0.05]
+# threshold = [284, 61, 1, 1.31, 34.5, 0.126, 0.165, 0.203, 5.74, 0.44]
+threshold = [209, 61, 1, 1.16, 34.5, 0.126, 0.165, 0.203, 5.74, 0.44]
 
 
 def preprocess(data):
@@ -100,15 +101,19 @@ def getname(data, sheet):
         line = ""
         summation = 0
         for k in range(2, 12):
-            if data[sheet][k][i] < threshold[i]:
-                summation = summation - threshold[i]
+            if data[sheet][k][i] < threshold[k - 2]:
+                summation = summation - weights[k - 2]
             else:
-                summation = summation + threshold[i]
+                summation = summation + weights[k - 2]
             if k == 11:
                 val = str(data[sheet][k][i])
             else:
                 val = str(data[sheet][k][i]) + ','
             line = line + val
+        if summation < 0.2:
+            line = line + ",Non-Healthy"
+        else:
+            line = line + ",Healthy"
         lines.append(line)
     return lines
 
@@ -119,8 +124,8 @@ if __name__ == '__main__':
     for sheet in sheets:
         try:
             lines = getname(data, sheet)
-            out = "./text/" + sheet + '.txt'
-            with open(out, 'w') as f:
+            out = "./text/out1.txt"
+            with open(out, 'a') as f:
                 for line in lines:
                     f.write(line)
                     f.write('\n')
